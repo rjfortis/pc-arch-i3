@@ -82,6 +82,7 @@ FONTS=(
   ttf-liberation
   ttf-dejavu
   ttf-jetbrains-mono
+  ttf-jetbrains-mono-nerd
 )
 
 # Development Tools
