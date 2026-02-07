@@ -5,6 +5,11 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+# Nix daemon (must be early)
+if [ -e /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+  . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+fi
+
 # Aliases
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
@@ -13,7 +18,12 @@ alias grep='grep --color=auto'
 PS1='[\u@\h \W]\$ '
 
 # Path
-export PATH="$HOME/.local/bin:$PATH"
+if [ -d "$HOME/.nix-profile/bin" ]; then
+  export PATH="$HOME/.nix-profile/bin:$HOME/.local/bin:$PATH"
+else
+  export PATH="$HOME/.local/bin:$PATH"
+fi
+
 
 # Enable Bash Completion
 if [ -r /usr/share/bash-completion/bash_completion ]; then
@@ -34,3 +44,5 @@ fi
 if [ -x "$HOME/.local/bin/mise" ]; then
   eval "$("$HOME/.local/bin/mise" activate bash)"
 fi
+
+

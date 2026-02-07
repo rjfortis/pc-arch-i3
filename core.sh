@@ -6,6 +6,7 @@ sudo pacman -Syu --noconfirm
 
 # Core System
 CORE_SYSTEM=(
+  cpupower
   i3-wm
   i3status
   i3lock
@@ -58,6 +59,7 @@ AUDIO_BRIGHTNESS=(
   pamixer
   brightnessctl
 )
+# rtkit
 
 # Essential Desktop Applications
 DESKTOP_APPS=(
@@ -130,14 +132,21 @@ if [ -f "$REPO_PATH/alacritty/alacritty.toml" ]; then
 fi
 
 # 4. Set correct permissions for xinitrc
-chmod +x "$HOME/.xinitrc"
+# chmod +x "$HOME/.xinitrc"
 
 # 5. Update user directories (Documents, Downloads, etc.)
 command -v xdg-user-dirs-update >/dev/null && xdg-user-dirs-update
 
-# 6. Enable Audio Services (Pipewire)
+sudo systemctl enable --now cpupower
+sudo cpupower frequency-set -g performance
+
+# Enable Audio Services (Pipewire)
 echo "Enabling Pipewire services..."
-systemctl --user enable --now pipewire.socket pipewire-pulse.socket wireplumber.service
+# systemctl --user enable --now pipewire.socket pipewire-pulse.socket wireplumber.service
+
+systemctl --user enable pipewire.socket pipewire-pulse.socket wireplumber.service || true
+systemctl --user start pipewire.socket pipewire-pulse.socket wireplumber.service || true
+
 
 echo "--------------------------------------------------"
 echo "Setup complete! Configs are now linked to this repo."
