@@ -1,0 +1,36 @@
+#
+# ~/.bashrc
+#
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+# Aliases
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+
+# Prompt Terminal
+PS1='[\u@\h \W]\$ '
+
+# Path
+export PATH="$HOME/.local/bin:$PATH"
+
+# Enable Bash Completion
+if [ -r /usr/share/bash-completion/bash_completion ]; then
+  source /usr/share/bash-completion/bash_completion
+fi
+
+# Initialize direnv
+if command -v direnv >/dev/null; then
+  eval "$(direnv hook bash)"
+fi
+
+# Start SSH Agent if not running
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    eval "$(ssh-agent -s)" > /dev/null
+fi
+
+# Mise activation
+if [ -x "$HOME/.local/bin/mise" ]; then
+  eval "$("$HOME/.local/bin/mise" activate bash)"
+fi
